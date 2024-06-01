@@ -11,17 +11,42 @@ def show_currency_form():
     return render_template('currency_rate_form.html')
 
 
-@app.route('/getCurrRate/<date>/', methods=['GET'])
-def get_currency_information_by_date(date):
+@app.route('/getCurrRateByDate', methods=['GET'])
+def get_currency_information_by_date():
+    date = request.args.get('date')
     if not Validator.is_valid_date(date):
-        return render_template('currency_rate_form.html', error_message_date_code = "Wrong date, please try again")
+        return render_template('currency_rate_form.html', error_message_date_code="Wrong date, please try again")
     params = {'ondate': date, 'periodicity': 0}
     try:
         response = requests.get(CurrencyAPI.target_url, params=params)
         response.raise_for_status()
-        return jsonify(response.json())
+        response_json = response.json()
+        print(response_json)
+        rate_date = []
+        for curr in response_json:
+            rate_date.append({'Cur_Abbreviation': curr.get('Cur_Abbreviation'),
+                              'Date': curr.get('Date')[:10], 'Cur_Scale': curr.get('Cur_Scale'),
+                              'Cur_OfficialRate': curr.get('Cur_OfficialRate')})
+        print(rate_date)
+        print('aaa')
+        return render_template('currency_rate_form.html', rate_date=rate_date)
+    except requests.exceptions.HTTPError as http_err:
+        error_message = f'HTTP error occurred: {http_err}'
+        if http_err.response.status_code == 404:
+            error_message = 'Currency data not found. Please check the date and currency code.'
+        return render_template('currency_rate_form.html', error_message_date=error_message)
+
+    except requests.exceptions.ConnectionError:
+        error_message = 'Connection error. Please check your network connection and try again.'
+        return render_template('currency_rate_form.html', error_message_date=error_message)
+
+    except requests.exceptions.Timeout:
+        error_message = 'The request timed out. Please try again later.'
+        return render_template('currency_rate_form.html', error_message_date=error_message)
+
     except requests.exceptions.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+        error_message = f'An error occurred: {e}'
+        return render_template('currency_rate_form.html', error_message_date=error_message)
 
 
 @app.route('/getCurrRateByDateCurCode', methods=['GET'])
@@ -29,7 +54,7 @@ def get_currency_information_by_date_and_code():
     date = request.args.get('date')
     cur_id = request.args.get('cur_id')
     if not Validator.is_valid_date(date):
-        return render_template('currency_rate_form.html', error_message_date_code = "Wrong date, please try again")
+        return render_template('currency_rate_form.html', error_message_date_code="Wrong date, please try again")
     target_url = CurrencyAPI.target_url + '/' + str(cur_id).upper()
     params = {'ondate': date, 'periodicity': 0, 'parammode': 2}
     try:
