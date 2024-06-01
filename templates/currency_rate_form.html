@@ -46,12 +46,30 @@ body {
 
         <input type="submit" value="Get Rate">
     </form>
-  {% for curr in rate_date %}
-      <p>Abbreviation: {{ curr['Cur_Abbreviation'] }}</p>
-      <p>Date: {{ curr['Date'] }}</p>
-      <p>Scale: {{ curr['Cur_Scale'] }}</p>
-      <p>Official Rate: {{ curr['Cur_OfficialRate'] }}</p>
-      {% endfor %}
+  {% if rate_date %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Abbreviation</th>
+                    <th>Date</th>
+                    <th>Scale</th>
+                    <th>Official Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for curr in rate_date %}
+                <tr>
+                    <td>{{ curr['Cur_Abbreviation'] }}</td>
+                    <td>{{ curr['Date'] }}</td>
+                    <td>{{ curr['Cur_Scale'] }}</td>
+                    <td>{{ curr['Cur_OfficialRate'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      {% else %}
+        <p>No data available.</p>
+    {% endif %}
   </div>
 <script src="{{ url_for('static', filename='currency_rate_form.js') }}"></script>
 </body>

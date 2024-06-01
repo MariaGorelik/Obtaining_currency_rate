@@ -21,14 +21,11 @@ def get_currency_information_by_date():
         response = requests.get(CurrencyAPI.target_url, params=params)
         response.raise_for_status()
         response_json = response.json()
-        print(response_json)
         rate_date = []
         for curr in response_json:
             rate_date.append({'Cur_Abbreviation': curr.get('Cur_Abbreviation'),
                               'Date': curr.get('Date')[:10], 'Cur_Scale': curr.get('Cur_Scale'),
                               'Cur_OfficialRate': curr.get('Cur_OfficialRate')})
-        print(rate_date)
-        print('aaa')
         return render_template('currency_rate_form.html', rate_date=rate_date)
     except requests.exceptions.HTTPError as http_err:
         error_message = f'HTTP error occurred: {http_err}'
