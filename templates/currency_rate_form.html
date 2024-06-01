@@ -16,13 +16,21 @@ body {
 </head>
 <body>
   <div class="container">
-    <h1>Currency rate</h1>
-      <form id='currency-form' action="/" method="get">
+<h1>Currency rate for the specified date and currency</h1>
+      <form id='form_date_curr_code' action="/" method="get">
         <label for="date">Date (YYYY-MM-DD):</label>
         <input type="text" id="date" name="date" required><br><br>
 
         <label for="currency_code">Currency Code:</label>
-        <input type="text" id="currency_code" name="currency_code"><br><br>
+        <input type="text" id="currency_code" name="currency_code" required><br><br>
+
+        <input type="submit" value="Get Rate">
+    </form>
+      <br><br>
+  <h1>All currency rates for the specified date</h1>
+      <form id='form_date' action="/" method="get">
+        <label for="date">Date (YYYY-MM-DD):</label>
+        <input type="text" id="date" name="date" required><br><br>
 
         <input type="submit" value="Get Rate">
     </form>
