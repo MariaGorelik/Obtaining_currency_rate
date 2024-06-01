@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    function validateForm(event) {
+    function validateDate(event) {
         const dateInput = event.target.querySelector('input[name="date"]').value;
         const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -30,12 +30,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function validateCurCode(event) {
+        const codeInput = event.target.querySelector('input[name="cur_id"]').value;
+        if (codeInput.length !== 3)
+        {
+            alert('Invalid code format. Please enter 3 letters');
+            event.preventDefault();
+        }
+    }
+
     const formIds = ['form_date', 'form_date_curr_code'];
 
     formIds.forEach(formId => {
         const form = document.getElementById(formId);
         if (form) {
-            form.addEventListener('submit', validateForm);
+            form.addEventListener('submit', validateDate);
         }
     });
+
+    const form = document.getElementById(('form_date_curr_code'))
+    if (form) {
+            form.addEventListener('submit', validateCurCode);
+        }
 });
