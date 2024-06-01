@@ -1,76 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Currency rate</title>
-<style>
-body {
-        background-color: #F4E7FC;
-    }
-.container {
-  display: flex;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Currency Rate</title>
+    <style>
+        body {
+            background-color: #F4E7FC;
+            font-family: Arial, sans-serif;
+            color: #4B0082;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #4B0082;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 300px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #CCCCCC;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #4B0082;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: #6A0DAD;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #4B0082;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #4B0082;
+            color: white;
+        }
+        td {
+            background-color: #FAF5FF;
+        }
+        .error {
+            color: red;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-<h1>Currency rate for the specified date and currency</h1>
-      {% if error_message_date_code %}
-    <p style="color: red;">{{ error_message_date_code }}</p>
-    {% endif %}
-      <form id='form_date_curr_code' action="/getCurrRateByDateCurCode" method="get">
-        <label for="date">Date (YYYY-MM-DD):</label>
-        <input type="text" id="date" name="date" required><br><br>
-
-        <label for="currency_code">Currency Code (ISO 4217 3 letters):</label>
-        <input type="text" id="cur_id" name="cur_id" required><br><br>
-
-        <input type="submit" value="Get Rate">
-    </form>
-  {% if rate_date_curr_id %}
-    <p>Abbreviation: {{ rate_date_curr_id['Cur_Abbreviation'] }}</p>
-    <p>Date: {{ rate_date_curr_id['Date'] }}</p>
-    <p>Scale: {{ rate_date_curr_id['Cur_Scale'] }}</p>
-    <p>Official Rate: {{ rate_date_curr_id['Cur_OfficialRate'] }}</p>
-    {% endif %}
-      <br><br>
-  <h1>All currency rates for the specified date</h1>
-  {% if error_message_date %}
-    <p style="color: red;">{{ error_message_date }}</p>
-    {% endif %}
-      <form id='form_date' action="/getCurrRateByDate" method="get">
-        <label for="date">Date (YYYY-MM-DD):</label>
-        <input type="text" id="date" name="date" required><br><br>
-
-        <input type="submit" value="Get Rate">
-    </form>
-  {% if rate_date %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Abbreviation</th>
-                    <th>Date</th>
-                    <th>Scale</th>
-                    <th>Official Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for curr in rate_date %}
-                <tr>
-                    <td>{{ curr['Cur_Abbreviation'] }}</td>
-                    <td>{{ curr['Date'] }}</td>
-                    <td>{{ curr['Cur_Scale'] }}</td>
-                    <td>{{ curr['Cur_OfficialRate'] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-      {% else %}
-        <p>No data available.</p>
-    {% endif %}
-  </div>
-<script src="{{ url_for('static', filename='currency_rate_form.js') }}"></script>
+    <div class="container">
+        <h1>Currency Rate for the Specified Date and Currency</h1>
+        {% if error_message_date_code %}
+            <p class="error">{{ error_message_date_code }}</p>
+        {% endif %}
+        <form id="form_date_curr_code" action="/getCurrRateByDateCurCode" method="get">
+            <label for="date">Date (YYYY-MM-DD):</label>
+            <input type="text" id="date" name="date" required>
+            <label for="currency_code">Currency Code (ISO 4217 3 letters):</label>
+            <input type="text" id="cur_id" name="cur_id" required>
+            <input type="submit" value="Get Rate">
+        </form>
+        {% if rate_date_curr_id %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Abbreviation</th>
+                        <th>Date</th>
+                        <th>Scale</th>
+                        <th>Official Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ rate_date_curr_id['Cur_Abbreviation'] }}</td>
+                        <td>{{ rate_date_curr_id['Date'] }}</td>
+                        <td>{{ rate_date_curr_id['Cur_Scale'] }}</td>
+                        <td>{{ rate_date_curr_id['Cur_OfficialRate'] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endif %}
+        <br><br>
+        <h1>All Currency Rates for the Specified Date</h1>
+        {% if error_message_date %}
+            <p class="error">{{ error_message_date }}</p>
+        {% endif %}
+        <form id="form_date" action="/getCurrRateByDate" method="get">
+            <label for="date">Date (YYYY-MM-DD):</label>
+            <input type="text" id="date" name="date" required>
+            <input type="submit" value="Get Rate">
+        </form>
+        {% if rate_date %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Abbreviation</th>
+                        <th>Date</th>
+                        <th>Scale</th>
+                        <th>Official Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for curr in rate_date %}
+                    <tr>
+                        <td>{{ curr['Cur_Abbreviation'] }}</td>
+                        <td>{{ curr['Date'] }}</td>
+                        <td>{{ curr['Cur_Scale'] }}</td>
+                        <td>{{ curr['Cur_OfficialRate'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='currency_rate_form.js') }}"></script>
 </body>
 </html>

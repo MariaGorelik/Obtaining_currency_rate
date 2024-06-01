@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, json, render_template
 import requests
 from currency_API import CurrencyAPI
 from validator import Validator
+from response_errors import ResponseError
 
 app = Flask(__name__)
 
@@ -27,22 +28,8 @@ def get_currency_information_by_date():
                               'Date': curr.get('Date')[:10], 'Cur_Scale': curr.get('Cur_Scale'),
                               'Cur_OfficialRate': curr.get('Cur_OfficialRate')})
         return render_template('currency_rate_form.html', rate_date=rate_date)
-    except requests.exceptions.HTTPError as http_err:
-        error_message = f'HTTP error occurred: {http_err}'
-        if http_err.response.status_code == 404:
-            error_message = 'Currency data not found. Please check the date and currency code.'
-        return render_template('currency_rate_form.html', error_message_date=error_message)
-
-    except requests.exceptions.ConnectionError:
-        error_message = 'Connection error. Please check your network connection and try again.'
-        return render_template('currency_rate_form.html', error_message_date=error_message)
-
-    except requests.exceptions.Timeout:
-        error_message = 'The request timed out. Please try again later.'
-        return render_template('currency_rate_form.html', error_message_date=error_message)
-
     except requests.exceptions.RequestException as e:
-        error_message = f'An error occurred: {e}'
+        error_message = ResponseError.get_error_message(e)
         return render_template('currency_rate_form.html', error_message_date=error_message)
 
 
@@ -62,22 +49,8 @@ def get_currency_information_by_date_and_code():
                              'Date': response_json.get('Date')[:10], 'Cur_Scale': response_json.get('Cur_Scale'),
                              'Cur_OfficialRate': response_json.get('Cur_OfficialRate')}
         return render_template('currency_rate_form.html', rate_date_curr_id=rate_date_curr_id)
-    except requests.exceptions.HTTPError as http_err:
-        error_message = f'HTTP error occurred: {http_err}'
-        if http_err.response.status_code == 404:
-            error_message = 'Currency data not found. Please check the date and currency code.'
-        return render_template('currency_rate_form.html', error_message_date_code=error_message)
-
-    except requests.exceptions.ConnectionError:
-        error_message = 'Connection error. Please check your network connection and try again.'
-        return render_template('currency_rate_form.html', error_message_date_code=error_message)
-
-    except requests.exceptions.Timeout:
-        error_message = 'The request timed out. Please try again later.'
-        return render_template('currency_rate_form.html', error_message_date_code=error_message)
-
     except requests.exceptions.RequestException as e:
-        error_message = f'An error occurred: {e}'
+        error_message = ResponseError.get_error_message(e)
         return render_template('currency_rate_form.html', error_message_date_code=error_message)
 
 
