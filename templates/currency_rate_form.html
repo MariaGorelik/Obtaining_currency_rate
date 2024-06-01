@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Currency rate</title>
+<style>
+body {
+        background-color: #F4E7FC;
+    }
+.container {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Currency rate</h1>
+      <form id='currency-form' action="/" method="get">
+        <label for="date">Date (YYYY-MM-DD):</label>
+        <input type="text" id="date" name="date" required><br><br>
+
+        <label for="currency_code">Currency Code:</label>
+        <input type="text" id="currency_code" name="currency_code"><br><br>
+
+        <input type="submit" value="Get Rate">
+    </form>
+  </div>
+<script src="{{ url_for('static', filename='currency_rate_form.js') }}"></script>
+</body>
+</html>
