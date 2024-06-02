@@ -3,6 +3,7 @@ import requests
 from currency_API import CurrencyAPI
 from validator import Validator
 from response_errors import ResponseError
+import zlib
 
 app = Flask(__name__)
 
