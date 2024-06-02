@@ -6,7 +6,7 @@ The Currency Rate Application is a Flask-based web application that allows users
 
 ### Installation
 1. Clone the repository:
-    ```bash
+    ```bash  
     git clone https://github.com/MariaGorelik/Obtaining_currency_rate.git
     cd Obtaining_currency_rate
 2. Create a virtual environment:
